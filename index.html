@@ -3,14 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Full Quiz System</title>
-
 <style>
 body{
     margin:0;
     font-family:'Segoe UI', Arial;
     background:linear-gradient(135deg,#667eea,#764ba2);
 }
-
 .container{
     max-width:1100px;
     margin:40px auto;
@@ -19,11 +17,8 @@ body{
     border-radius:15px;
     box-shadow:0 15px 40px rgba(0,0,0,0.2);
 }
-
 .hidden{display:none}
-
 h1{text-align:center;color:#2c3e50}
-
 button{
     padding:10px 15px;
     border:none;
@@ -32,12 +27,10 @@ button{
     font-weight:bold;
     margin:5px;
 }
-
 .teacher{background:#2c3e50;color:white}
 .student{background:#3498db;color:white}
 .success{background:#27ae60;color:white}
 .danger{background:#e74c3c;color:white}
-
 input,textarea,select{
     width:100%;
     padding:10px;
@@ -45,31 +38,26 @@ input,textarea,select{
     border-radius:8px;
     border:1px solid #ccc;
 }
-
 table{
     width:100%;
     border-collapse:collapse;
     margin-top:15px;
 }
-
 th{
     background:#2c3e50;
     color:white;
     padding:10px;
 }
-
 td{
     padding:8px;
     border-bottom:1px solid #eee;
 }
-
 .card{
     background:#f9f9f9;
     padding:12px;
     border-radius:10px;
     margin-top:10px;
 }
-
 .timer{
     text-align:center;
     font-weight:bold;
@@ -77,11 +65,9 @@ td{
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
-
 <h1>🎓 Quiz System</h1>
 
 <div id="roleBox">
@@ -99,25 +85,18 @@ td{
 
 <!-- TEACHER -->
 <div id="teacherPanel" class="hidden">
-
 <h2>Teacher Panel</h2>
-
 <input id="timeLimit" type="number" placeholder="Exam time (minutes)">
-
 <textarea id="q" placeholder="Question"></textarea>
-
 <input id="A" placeholder="A">
 <input id="B" placeholder="B">
 <input id="C" placeholder="C">
 <input id="D" placeholder="D">
-
 <input id="marks" type="number" placeholder="Marks">
-
 <select id="correct">
 <option>A</option><option>B</option>
 <option>C</option><option>D</option>
 </select>
-
 <button class="teacher" onclick="saveQ()">Save Question</button>
 
 <h3>Questions</h3>
@@ -127,19 +106,15 @@ td{
 <div id="results"></div>
 
 <button class="danger" onclick="logout()">Logout</button>
-
 </div>
 
 <!-- STUDENT -->
 <div id="studentPanel" class="hidden">
-
 <h2>Student Panel</h2>
-
 <input id="studentName" placeholder="Your Name">
 <input id="studentClass" placeholder="Your Class">
 
 <div class="timer" id="timer"></div>
-
 <div id="quiz"></div>
 
 <button class="student" onclick="submitQuiz()">Submit</button>
@@ -147,13 +122,11 @@ td{
 <div id="result"></div>
 
 <button class="danger" onclick="logout()">Logout</button>
-
 </div>
 
 </div>
 
 <script>
-
 let questions = JSON.parse(localStorage.getItem("questions")) || [];
 let results = JSON.parse(localStorage.getItem("results")) || [];
 let teachers = JSON.parse(localStorage.getItem("teachers")) || [];
@@ -180,7 +153,6 @@ function registerTeacher(){
 }
 
 function loginTeacher(){
-
     let t = teachers.find(x=>x.u==tUser.value && x.p==tPass.value);
 
     if(!t){
@@ -202,7 +174,6 @@ function logout(){
 
 /* CRUD QUESTIONS */
 function saveQ(){
-
     questions.push({
         q:q.value,
         A:A.value,
@@ -218,7 +189,6 @@ function saveQ(){
 }
 
 function renderQuestions(){
-
     table.innerHTML = questions.map((q,i)=>`
     <div class="card">
     ${q.q}<br>
@@ -230,7 +200,6 @@ function renderQuestions(){
 
 /* STUDENT */
 function startQuiz(){
-
     startTime = Date.now();
 
     quiz.innerHTML = questions.map((q,i)=>`
@@ -247,7 +216,6 @@ function startQuiz(){
 
 /* TIMER */
 function timerFunc(){
-
     let limit = Number(timeLimit.value || 60);
     let passed = (Date.now()-startTime)/60000;
     let left = limit - passed;
@@ -261,7 +229,6 @@ function timerFunc(){
 
 /* SUBMIT */
 function submitQuiz(){
-
     let name = studentName.value;
     let cls = studentClass.value;
 
@@ -273,7 +240,6 @@ function submitQuiz(){
     let score=0,total=0,review="";
 
     questions.forEach((q,i)=>{
-
         total += q.marks;
 
         let ans = document.querySelector(`input[name=q${i}]:checked`)?.value;
@@ -283,10 +249,12 @@ function submitQuiz(){
         if(ans==q.correct){
             score += q.marks;
         }else{
+            // ✅ UPDATED PART (shows full correct answer)
             review += `
             <div class="card">
-            ❌ ${q.q}<br>
-            Correct: ${q.correct}
+            ❌ <b>${q.q}</b><br>
+            Your Answer: ${ans}<br>
+            ✅ Correct Answer: ${q.correct} - ${q[q.correct]}
             </div>`;
         }
     });
@@ -314,7 +282,6 @@ function submitQuiz(){
 
 /* RESULT CRUD */
 function renderResults(){
-
     let html = `
     <table>
     <tr>
@@ -346,7 +313,6 @@ function renderResults(){
 
 /* EDIT RESULT */
 function editResult(i){
-
     let r = results[i];
 
     let name = prompt("Name:", r.name);
@@ -371,7 +337,6 @@ function deleteResult(i){
         renderResults();
     }
 }
-
 </script>
 
 </body>
